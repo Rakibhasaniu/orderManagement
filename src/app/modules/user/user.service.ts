@@ -18,11 +18,64 @@ const createUserIntoDB = async(payload:TUser) =>{
   if (userObject.address) {
     delete userObject.address._id;
   }
-    //   console.log(userObject)
+      console.log(userObject)
     return userObject;
 }
 
+const getAllUserFromDB = async () => {
+    const result = await User.aggregate([
+        { $match: {} },
+        {
+          $project: {
+            _id: 0,
+            password: 0,
+            __v: 0,
+            "fullName._id": 0,
+            "address._id": 0,
+          },
+        },
+      ]);
+    
+      return result;
+  };
+const getSingleUserFromDB = async (payload:number) => {
+    // console.log(payload)
+    // const result = await User.findById(payload);
+    // console.log(result)
+    // const result = await User.aggregate([
+    //     { $match: {userId:payload} },
+    //     {
+    //       $project: {
+    //         _id: 0,
+    //         password: 0,
+    //         __v: 0,
+    //         "fullName._id": 0,
+    //         "address._id": 0,
+    //       },
+    //     },
+    //   ]);
+    // console.log(result)
+    //   return result;
+    const result = await User.aggregate([
+        { $match: { userId: payload } },
+        {
+          $project: {
+            _id: 0,
+            password: 0,
+            __v: 0,
+            "fullName._id": 0,
+            "address._id": 0,
+          },
+        },
+      ]);
+      return result;
+  };
+
+
+
 export const UserServices ={
     createUserIntoDB,
-    
+    getAllUserFromDB,
+    getSingleUserFromDB
+
 }
